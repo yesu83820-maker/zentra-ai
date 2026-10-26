@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZENTRA AI — Think. Create. Grow.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #070b19;
+      --bg-surface: rgba(16, 24, 48, 0.7);
+      --bg-surface-light: rgba(26, 38, 77, 0.5);
+      --border-glow: rgba(0, 242, 254, 0.25);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --cyan: #00f2fe;
+      --blue: #4facfe;
+      --purple: #9b51e0;
+      --text-main: #f0f4fc;
+      --text-muted: #94a3b8;
+      --user-bubble: linear-gradient(135deg, #1e3a8a, #4338ca);
+      --ai-bubble: rgba(18, 27, 54, 0.85);
+      --card-radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Telugu', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -1;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .glow-1 { top: -100px; left: -100px; width: 350px; height: 350px; background: var(--purple); }
+    .glow-2 { bottom: -150px; right: -100px; width: 400px; height: 400px; background: var(--cyan); }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 11, 25, 0.85);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      border-radius: 9px;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+    .logo-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: #070b19;
+      stroke-width: 2.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .btn-key {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-glow);
+      color: var(--cyan);
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 2rem 0.5rem 2.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid var(--border-glow);
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 7vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+      background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 75%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: clamp(0.95rem, 3vw, 1.2rem);
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .lang-toggle-wrap {
+      display: inline-flex;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 30px;
+      padding: 4px;
+      margin-bottom: 1.5rem;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .lang-btn.active {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #070b19;
+    }
+
+    /* Chat Section */
+    .chat-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--card-radius);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+      margin-bottom: 3rem;
+    }
+    .chat-header {
+      padding: 0.85rem 1.2rem;
+      background: rgba(11, 18, 38, 0.7);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+    .btn-new-chat {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.35rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .chat-bubble {
+      max-width: 88%;
+      padding: 0.85rem 1.1rem;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--user-bubble);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.ai {
+      align-self: flex-start;
+      background: var(--ai-bubble);
+      border: 1px solid var(--border-subtle);
+      border-bottom-left-radius: 4px;
+      color: #e2e8f0;
+    }
+    .chat-bubble.error-bubble {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .chat-input-area {
+      padding: 0.8rem 1rem;
+      background: rgba(11, 18, 38, 0.7);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      gap: 0.6rem;
+    }
+    .chat-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .chat-input:focus { border-color: var(--cyan); }
+    .btn-send {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #070b19;
+      border: none;
+      padding: 0.75rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Modal for Key Configuration */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-box {
+      background: #0d152b;
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 420px;
+    }
+    .modal-box h3 { margin-bottom: 0.6rem; font-size: 1.2rem; color: #fff; }
+    .modal-box p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .modal-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.7rem;
+      color: #fff;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
+    .btn-save {
+      background: var(--cyan);
+      color: #070b19;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-cancel {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Prompts Grid */
+    .prompts-container { margin-bottom: 3rem; }
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.8rem;
+    }
+    .prompt-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+    }
+    .prompt-card:hover { border-color: var(--border-glow); }
+    .prompt-badge { font-size: 0.7rem; font-weight: 700; color: var(--cyan); }
+    .prompt-text { font-size: 0.88rem; color: #cbd5e1; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <div class="glow-orb glow-1"></div>
+  <div class="glow-orb glow-2"></div>
+
+  <!-- Key Modal -->
+  <div class="modal-overlay" id="keyModal">
+    <div class="modal-box">
+      <h3>🔑 Gemini API Key</h3>
+      <p>Your key is saved only inside your personal phone browser cache (`localStorage`). It is never uploaded to any public server.</p>
+      <input type="password" id="apiKeyInput" class="modal-input" placeholder="Paste AI Studio Key (AIzaSy...)" />
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeKeyModal()">Cancel</button>
+        <button class="btn-save" onclick="saveApiKey()">Save Key</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><polyline points="4 5 20 5 4 19 20 19"></polyline></svg>
+        </div>
+        <span>ZENTRA AI</span>
+      </a>
+      <div class="nav-actions">
+        <button class="btn-key" onclick="openKeyModal()">⚙️ API Key</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badge">Next-Gen Intelligence</div>
+      <h1>Think. Create. Grow.<br/>With ZENTRA AI</h1>
+      <p>Your AI Companion. Anytime. Anywhere.</p>
+
+      <div class="lang-toggle-wrap">
+        <button class="lang-btn active" id="btnLangEn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" id="btnLangTe" onclick="setLanguage('te')">తెలుగు</button>
+      </div>
+    </section>
+
+    <section class="chat-section">
+      <div class="chat-header">
+        <div class="chat-title">
+          <div class="status-dot"></div>
+          <span>ZENTRA Assistant</span>
+        </div>
+        <button class="btn-new-chat" onclick="clearChat()">+ New Chat</button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-bubble ai" id="welcomeMsg">
+          Hello! I am <strong>ZENTRA AI</strong>. Tap "⚙️ API Key" at top-right to enter your free Gemini key once, then ask any question!
+        </div>
+      </div>
+
+      <form class="chat-input-area" onsubmit="handleSend(event)">
+        <input type="text" id="userInput" class="chat-input" placeholder="Ask a question..." autocomplete="off" required />
+        <button type="submit" class="btn-send" id="sendBtn">➔</button>
+      </form>
+    </section>
+
+    <section class="prompts-container">
+      <div class="prompt-grid" id="promptGrid"></div>
+    </section>
+  </main>
+
+  <script>
+    let currentLanguage = 'en';
+    let chatHistory = [];
+
+    const promptsData = {
+      en: [
+        { cat: 'STUDY', text: 'Explain Photosynthesis simply with bullet points.' },
+        { cat: 'WRITING', text: 'Write a motivating short story about a student.' },
+        { cat: 'CODING', text: 'Explain the difference between let and const in JavaScript.' },
+        { cat: 'CREATIVE', text: 'Give me 3 unique project ideas for a student science fair.' }
+      ],
+      te: [
+        { cat: 'చదువు', text: 'సౌర వ్యవస్థ (Solar System) గురించి సరళంగా వివరించండి.' },
+        { cat: 'రచన', text: 'విద్యార్థుల కోసం స్ఫూర్తిదాయకమైన చిన్న కథ రాయండి.' },
+        { cat: 'లెర్నింగ్', text: 'కోడింగ్ నేర్చుకోవడానికి ఉత్తమ చిట్కాలు ఏమిటి?' },
+        { cat: 'సృజనాత్మకత', text: 'సమయాన్ని సద్వినియోగం చేసుకోవడానికి 5 అలవాట్లు.' }
+      ]
+    };
+
+    function openKeyModal() {
+      document.getElementById('apiKeyInput').value = localStorage.getItem('zentra_gemini_key') || '';
+      document.getElementById('keyModal').style.display = 'flex';
+    }
+    function closeKeyModal() {
+      document.getElementById('keyModal').style.display = 'none';
+    }
+    function saveApiKey() {
+      const val = document.getElementById('apiKeyInput').value.trim();
+      if (val) {
+        localStorage.setItem('zentra_gemini_key', val);
+        alert('API Key saved safely on your device!');
+        closeKeyModal();
+      } else {
+        alert('Please enter a valid key.');
+      }
+    }
+
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
+      document.getElementById('btnLangTe').classList.toggle('active', lang === 'te');
+      renderPrompts();
+    }
+
+    function renderPrompts() {
+      const grid = document.getElementById('promptGrid');
+      grid.innerHTML = '';
+      promptsData[currentLanguage].forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'prompt-card';
+        div.onclick = () => {
+          document.getElementById('userInput').value = item.text;
+          handleSend(new Event('submit'));
+        };
+        div.innerHTML = `<span class="prompt-badge">${item.cat}</span><p class="prompt-text">${item.text}</p>`;
+        grid.appendChild(div);
+      });
+    }
+
+    function clearChat() {
+      chatHistory = [];
+      document.getElementById('chatMessages').innerHTML = `
+        <div class="chat-bubble ai">
+          ${currentLanguage === 'te' ? 'కొత్త సంభాషణ ప్రారంభమైంది.' : 'New conversation started.'}
+        </div>
+      `;
+    }
+
+    async function handleSend(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const apiKey = localStorage.getItem('zentra_gemini_key');
+      if (!apiKey) {
+        appendBubble('Please tap "⚙️ API Key" at the top to configure your Gemini key first.', 'error-bubble');
+        openKeyModal();
+        return;
+      }
+
+      appendBubble(text, 'user');
+      input.value = '';
+
+      const chatBox = document.getElementById('chatMessages');
+      const loading = document.createElement('div');
+      loading.className = 'chat-bubble ai';
+      loading.innerText = 'Thinking...';
+      chatBox.appendChild(loading);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const promptInstruction = currentLanguage === 'te'
+          ? 'Respond fluently in Telugu (తెలుగు) script. Student topic: '
+          : 'You are ZENTRA AI, a helpful tutor. Explain clearly: ';
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptInstruction + text }] }]
+          })
+        });
+
+        const data = await res.json();
+        chatBox.removeChild(loading);
+
+        if (res.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+          appendBubble(data.candidates[0].content.parts[0].text, 'ai');
+        } else {
+          appendBubble(data.error?.message || 'Invalid API Key or Gemini request failed.', 'error-bubble');
+        }
+      } catch (err) {
+        if (loading.parentNode) chatBox.removeChild(loading);
+        appendBubble('Network error. Check your internet connection.', 'error-bubble');
+      }
+    }
+
+    function appendBubble(text, type) {
+      const box = document.getElementById('chatMessages');
+      const b = document.createElement('div');
+      b.className = `chat-bubble ${type}`;
+      b.innerText = text;
+      box.appendChild(b);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    renderPrompts();
+  </script>
+</body>
+  </html>
