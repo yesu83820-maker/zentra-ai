@@ -10,7 +10,6 @@ const app = express();
 const port = process.env.PORT || 10000;
 
 app.use(express.json());
-// రూట్ ఫోల్డర్‌లోనే HTML ఫైల్స్ ఉండేలా సెట్ చేస్తున్నాం
 app.use(express.static(__dirname));
 
 const ai = new GoogleGenAI();
@@ -19,7 +18,7 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       contents: message,
     });
     res.json({ reply: response.text });
